@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobMatch AI</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #ffffff;
+            color: #292329;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* NAVBAR */
+        nav {
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            /* Sol grubu ve sağdaki rozeti iki uca yaslar */
+            padding: 0 7%;
+            border-bottom: 1px solid #f8e8f0;
+        }
+
+        /* Logo ve görseli yan yana tutan kapsayıcı */
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            /* Görsel ile yazı arasındaki boşluk */
+            text-decoration: none;
+        }
+
+        .header-flower {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+            transform: rotate(-8deg);
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #292329;
+        }
+
+        .logo span {
+            color: #d41472;
+        }
+
+        .nav-badge {
+            background: #fff0f7;
+            color: #c21868;
+            padding: 7px 15px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 44px 20px 32px;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            background: #fff0f7;
+            color: #d41472;
+            padding: 7px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(40px, 5.5vw, 68px);
+            line-height: 1.12;
+            letter-spacing: -1px;
+            font-weight: 600;
+        }
+
+        .hero h1 span {
+            color: #d41472;
+        }
+
+        .hero p {
+            max-width: 580px;
+            margin: 16px auto 0;
+            color: #797176;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* CONTAINER */
+        .container {
+            width: 100%;
+            max-width: 1040px;
+            margin: 0 auto;
+            padding: 0 24px 40px;
+            flex: 1;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .input-card {
+            background: #fff9fc;
+            border: 1px solid #f2dae6;
+            border-radius: 24px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .input-card:focus-within {
+            border-color: #df8aae;
+            box-shadow: 0 10px 30px rgba(212, 20, 114, 0.07);
+        }
+
+        .card-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fbe0ee;
+            color: #c21868;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .card-top h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #2e262c;
+        }
+
+        .card-top p {
+            font-size: 13px;
+            color: #8c8187;
+            margin-top: 1px;
+        }
+
+        /* CV UPLOAD */
+        .file-upload {
+            width: 100%;
+            height: 185px;
+            border: 2px dashed #edb8cf;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            background: #ffffff;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .file-upload.dragover {
+            border-color: #d41472;
+            background: #fff0f7;
+        }
+
+        .file-upload:hover {
+            border-color: #d41472;
+            background: #fffafc;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .file-upload-content {
+            pointer-events: none;
+            padding: 10px;
+        }
+
+        .file-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 10px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff0f7;
+            color: #d41472;
+            font-size: 24px;
+        }
+
+        .upload-title {
+            color: #55444e;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .upload-subtitle {
+            font-size: 12px;
+            color: #9e9097;
+            margin-top: 4px;
+        }
+
+        .file-name {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #d41472;
+            font-weight: 600;
+            max-width: 250px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* TEXTAREA */
+        textarea {
+            width: 100%;
+            height: 185px;
+            resize: none;
+            border: 1px solid #eed8e3;
+            border-radius: 18px;
+            outline: none;
+            background: #ffffff;
+            padding: 16px;
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        textarea:focus {
+            border-color: #df8aae;
+            box-shadow: 0 4px 16px rgba(212, 20, 114, 0.05);
+        }
+
+        textarea::placeholder {
+            color: #b3a8ae;
+        }
+
+        /* BUTTON */
+        .action {
+            display: flex;
+            justify-content: center;
+            margin: 28px 0 20px;
+        }
+
+        button {
+            border: none;
+            background: #d41472;
+            color: white;
+            padding: 15px 38px;
+            border-radius: 50px;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(212, 20, 114, 0.25);
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background: #bd0f64;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(212, 20, 114, 0.32);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* RESULTS */
+        #result {
+            display: none;
+            margin-top: 30px;
+            padding-bottom: 20px;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .result-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .result-header p {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .score-card {
+            background: #fff0f7;
+            border: 1px solid #fcdbe9;
+            border-radius: 22px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .score-label {
+            color: #a06482;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .score {
+            font-size: 48px;
+            font-weight: 700;
+            color: #d41472;
+            letter-spacing: -2px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .skill-card {
+            padding: 22px;
+            border: 1px solid #f2e2ea;
+            border-radius: 20px;
+            background: white;
+        }
+
+        .skill-card h3 {
+            font-size: 15px;
+            margin-bottom: 14px;
+            color: #332b30;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill {
+            padding: 7px 12px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .matched {
+            background: #fff0f7;
+            color: #c21868;
+            border: 1px solid #fad7e8;
+        }
+
+        .missing {
+            background: #f7f3f5;
+            color: #6e6469;
+            border: 1px solid #eae2e6;
+        }
+
+        .empty {
+            color: #999;
+            font-size: 13px;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #f8e8f0;
+            color: #a4979e;
+            font-size: 12px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            nav {
+                grid-template-columns: auto 1fr;
+                padding: 0 20px;
+            }
+
+            .nav-right {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 38px;
+            }
+
+            .input-grid,
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="nav-left">
+            <img src="pink stickers redbubble _ Pink Jellyfish Sticker.jpg" class="header-flower" alt="Logo Icon">
+            <div class="logo">
+                JobMatch<span> AI</span>
+            </div>
+        </div>
+
+        <div class="nav-badge">
+            ✦ AI-Powered Matching
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-tag">✦ Smart Career Matching</div>
+        <h1>
+            Find out how well your<br>
+            <span>CV matches</span> a job.
+        </h1>
+        <p>
+            Compare your skills with a job description and discover
+            what matches and which skills you may be missing.
+        </p>
+    </section>
+
+    <main class="container">
+        <div class="input-grid">
+
+            <div class="input-card">
+                <div class="card-top">
+                    <div class="icon">CV</div>
+                    <div>
+                        <h3>Your CV</h3>
+                        <p>Upload your CV as PDF</p>
+                    </div>
+                </div>
+
+                <label class="file-upload" id="dropZone">
+                    <input type="file" id="cvFile" accept=".pdf,application/pdf">
+                    <div class="file-upload-content">
+                        <div class="file-icon">📄</div>
+                        <div class="upload-title" id="uploadTitle">Click to upload your CV</div>
+                        <div class="upload-subtitle" id="uploadSubtitle">PDF files only</div>
+                        <div id="fileName" class="file-name"></div>
+                    </div>
+                </label>
+            </div>
+
+            <div class="input-card">
+                <div class="card-top">
+                    <div class="icon">JD</div>
+                    <div>
+                        <h3>Job Description</h3>
+                        <p>Paste the job requirements</p>
+                    </div>
+                </div>
+                <textarea id="job" placeholder="Paste the job description here..."></textarea>
+            </div>
+
+        </div>
+
+        <div class="action">
+            <button id="analyzeButton" onclick="matchJob()">
+                Analyze Match →
+            </button>
+        </div>
+
+        <div id="result">
+            <div class="result-header">
+                <h2>Your Match Results</h2>
+                <p>Based on the information you provided</p>
+            </div>
+
+            <div class="score-card">
+                <div class="score-label">MATCH SCORE</div>
+                <div class="score"><span id="score">0</span>%</div>
+            </div>
+
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <h3>✓ Matched Skills</h3>
+                    <div id="matchedSkills" class="skill-list"></div>
+                </div>
+
+                <div class="skill-card">
+                    <h3>Missing Skills</h3>
+                    <div id="missingSkills" class="skill-list"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        JobMatch AI · CV & Job Description Analysis
+    </footer>
+
+    <script>
+        const cvFileInput = document.getElementById("cvFile");
+        const fileNameDisplay = document.getElementById("fileName");
+        const uploadTitle = document.getElementById("uploadTitle");
+        const dropZone = document.getElementById("dropZone");
+
+        // Dosya seçildiğinde arayüzü güncelle
+        cvFileInput.addEventListener("change", function () {
+            handleFileSelection(this.files[0]);
+        });
+
+        // Sürükle - Bırak (Drag and Drop) Olayları
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.add('dragover');
+            });
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.classList.remove('dragover');
+            });
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                cvFileInput.files = files;
+                handleFileSelection(files[0]);
+            }
+        });
+
+        function handleFileSelection(file) {
+            if (file) {
+                if (file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")) {
+                    fileNameDisplay.textContent = file.name;
+                    uploadTitle.textContent = "Selected File:";
+                } else {
+                    alert("Please select a valid PDF file.");
+                    cvFileInput.value = "";
+                    fileNameDisplay.textContent = "";
+                    uploadTitle.textContent = "Click to upload your CV";
+                }
+            }
+        }
+
+        // FastAPI ile Eşleştirme İsteği
+        async function matchJob() {
+            const job = document.getElementById("job").value.trim();
+            const button = document.getElementById("analyzeButton");
+
+            if (!cvFileInput.files.length) {
+                alert("Please upload your CV.");
+                return;
+            }
+
+            if (!job) {
+                alert("Please enter the job description.");
+                return;
+            }
+
+            const file = cvFileInput.files[0];
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("job_description", job);
+
+            button.disabled = true;
+            button.textContent = "Analyzing...";
+
+            try {
+                const response = await fetch("http://127.0.0.1:8000/match-pdf", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error("Server error:", errorText);
+                    throw new Error("Server error");
+                }
+
+                const data = await response.json();
+
+                document.getElementById("result").style.display = "block";
+                document.getElementById("score").textContent = Number(data.match_score).toFixed(1);
+
+                const matchedContainer = document.getElementById("matchedSkills");
+                const missingContainer = document.getElementById("missingSkills");
+
+                matchedContainer.innerHTML = "";
+                missingContainer.innerHTML = "";
+
+                if (!data.matched_skills || data.matched_skills.length === 0) {
+                    matchedContainer.innerHTML = '<span class="empty">No matched skills found.</span>';
+                } else {
+                    data.matched_skills.forEach(skill => {
+                        const element = document.createElement("span");
+                        element.className = "skill matched";
+                        element.textContent = "✓ " + skill;
+                        matchedContainer.appendChild(element);
+                    });
+                }
+
+                if (!data.missing_skills || data.missing_skills.length === 0) {
+                    missingContainer.innerHTML = '<span class="empty">No missing skills found.</span>';
+                } else {
+                    data.missing_skills.forEach(skill => {
+                        const element = document.createElement("span");
+                        element.className = "skill missing";
+                        element.textContent = skill;
+                        missingContainer.appendChild(element);
+                    });
+                }
+
+                document.getElementById("result").scrollIntoView({ behavior: "smooth" });
+
+            } catch (error) {
+
+                console.error("ERROR:", error);
+
+                alert("Error: " + error.message);
+            }
+            finally {
+                button.disabled = false;
+                button.textContent = "Analyze Match →";
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -65,11 +65,13 @@ skills = [
     "NLP",
     "LLM",
     "Generative AI",
+    "OpenAI API",
 
     # Tools
     "Git",
     "GitHub",
     "Jira",
     "Postman",
-    "n8n"
+    "n8n",
+    "MinIO"
 ]

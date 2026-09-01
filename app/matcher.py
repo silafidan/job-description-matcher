@@ -1,7 +1,7 @@
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from skills import skills
+from app.skills import skills
 
 
 
@@ -21,6 +21,13 @@ def match(cv, job_description):
            else:
                missing_skills.append(skill) 
 
+    total_skills = len(matched_skills) + len(missing_skills)       
+
+    if total_skills > 0:
+       skill_score = len(matched_skills) / total_skills * 100
+    else:
+        return score, matched_skills, missing_skills   
+
     
 
     documents = [cv, job_description]
@@ -31,7 +38,8 @@ def match(cv, job_description):
     score = similarity[0][0]
     # yüzdeye çevirmek için
     score = round(score * 100,2)
+    final_score = round(score * 0.4 + skill_score * 0.6, 2)
 
  
 
-    return score, matched_skills, missing_skills
+    return final_score, matched_skills, missing_skills
